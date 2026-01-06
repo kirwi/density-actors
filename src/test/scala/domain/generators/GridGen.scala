@@ -15,8 +15,8 @@ object GridGen:
     yield GridSpec(
       xMin,
       yMin,
-      xMin + nx * cellSize,
-      yMin + ny * cellSize,
+      math.nextUp(xMin + nx * cellSize),
+      math.nextUp(yMin + ny * cellSize),
       cellSize
     )
 
