@@ -16,15 +16,24 @@ object Delta:
         val Point(x, y) = event.location
         val (xMinBox, xMaxBox) = (x - radius, x + radius)
         val (yMinBox, yMaxBox) = (y - radius, y + radius)
-        // xMinBox <= minX + (ixMin + 0.5) * cellSize <= xMaxBox
+
+        // Find the set of ix whose centers fall within the box:
+        // xMinBox <= minX + (ix + 0.5) * cellSize <= xMaxBox
+        // ceil(x) := smallest int larger than x
+        // floor(x) := largest int less than x
         val ixMin = math.ceil((xMinBox - spec.minX) / h - 0.5).toInt
         val ixMax = math.floor((xMaxBox - spec.minX) / h - 0.5).toInt
         val iyMin = math.ceil((yMinBox - spec.minY) / h - 0.5).toInt
         val iyMax = math.floor((yMaxBox - spec.minY) / h - 0.5).toInt
+
+        // Clamp the range to ensure it's not outside the grid
         val (ixMinClamped, iyMinClamped) = (ixMin max 0, iyMin max 0)
         val (ixMaxClamped, iyMaxClamped) = (ixMax min (nx - 1), iyMax min (ny - 1))
         val ixs = List.range(ixMinClamped, ixMaxClamped + 1)
         val iys = List.range(iyMinClamped, iyMaxClamped + 1)
+
+        // Filter out cells whose centers fall outside the support radius
+        // Create a sparse vector to add to the cumulative density via Actors
         val candidates = ixs.flatMap(x => iys.map(y => Cell(x, y)))
         val deltas: List[(Int, Double)] = candidates
           .map { cell =>

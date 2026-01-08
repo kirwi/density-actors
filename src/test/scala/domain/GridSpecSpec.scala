@@ -2,7 +2,6 @@ package domain
 
 import org.scalacheck.Properties
 import org.scalacheck.Prop.{forAll, propBoolean}
-import org.scalacheck.Gen
 import generators.GridGen.{gridSpecGen, validIndices}
 
 object GridSpecSpec extends Properties("GridSpec"):
@@ -24,12 +23,9 @@ object GridSpecSpec extends Properties("GridSpec"):
     (gs: GridSpec) =>
       val (nx, ny) = gs.gridDims
       val indices = validIndices(nx, ny)
-      indices.nonEmpty ==> {
-        forAll(Gen.oneOf(indices)) {
-          case (ix, iy) =>
-            val linearIdx = gs.linearIndex(ix, iy)
-            linearIdx >= 0 && linearIdx < nx * ny
-        }
+      indices.nonEmpty ==> indices.forall { case (ix, iy) =>
+        val linearIdx = gs.linearIndex(ix, iy)
+        linearIdx >= 0 && linearIdx < nx * ny
       }
   }
 
@@ -37,13 +33,6 @@ object GridSpecSpec extends Properties("GridSpec"):
     (gs: GridSpec) =>
       val (nx, ny) = gs.gridDims
       val indices = validIndices(nx, ny)
-      indices.size >=2 ==> {
-        forAll(Gen.pick(2, indices)) {
-          picked =>
-            val List((ix1, iy1), (ix2, iy2)) = picked.toList
-            gs.linearIndex(ix1, iy1) != gs.linearIndex(ix2, iy2)
-        }
-      }
+      val linearIndices = indices.map(gs.linearIndex)
+      linearIndices.distinct.size == linearIndices.size
   }
-
-

@@ -8,5 +8,10 @@ lazy val root = project
 
     scalaVersion := scala3Version,
 
-    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.19.0" % Test
+    libraryDependencies ++= Seq(
+      "org.apache.pekko" %% "pekko-actor-typed" % "1.4.0",
+      "org.apache.pekko" %% "pekko-actor-testkit-typed" % "1.4.0" % Test,
+      "org.scalacheck" %% "scalacheck" % "1.19.0" % Test
+    )
+
   )

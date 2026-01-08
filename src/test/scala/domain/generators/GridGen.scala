@@ -24,4 +24,3 @@ object GridGen:
     val xs = 0 until nx
     val ys = 0 until ny
     xs.flatMap(x => ys.map(y => (x, y)))
-      
