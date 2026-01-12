@@ -10,3 +10,10 @@ case class DensityGrid(spec: GridSpec, density: Vector[Double]):
         buffer(idx) += weight
         
       DensityGrid(spec, buffer.toVector)
+
+object DensityGrid:
+
+  def zeros(grid: GridSpec): DensityGrid =
+    val (nx, ny) = grid.gridDims
+    val zeroDensity = Vector.fill(nx*ny)(0.0)
+    DensityGrid(grid, zeroDensity)
