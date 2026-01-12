@@ -16,20 +16,16 @@ with a closed set of kernel variants, intentionally avoiding
 additional abstraction layers to keep the focus on 
 coordination and state management. It features:
 
-- incremental updates rather than the more familiar
-batch update schemes one would use with something like Spark
+- incremental updates rather than batch update schemes (Spark)
 - clear ownership of mutable state
 - predictable concurrency semantics
 - separation between the kde numerical model and coordination model.
 
 
 ## High-Level Architecture
-There is currently only one main actor. DensityGridActor 
+There is currently only one main actor, `DensityGridActor`, that 
 receives incremental updates to the evolving density and 
-returns snapshots of the current density field. Future iterations
-will see the implementation of various other actors responsible
-for computing density contours, constructing GeoJSON representations
-for ingestion by a frontend UI, etc.
+returns snapshots of the current density field. 
 
 ## Data Model
 `GridSpec` is a grid specification representing the real-space
@@ -78,7 +74,7 @@ updates, but it does provide a consistent view of the density
 field suitable for downstream consumers such as contour 
 extraction or visualization.
 
-## Numerical Context (Brief)
+## Numerical Context
 Kernel density estimation is performed over a fixed spatial 
 grid, with density values accumulated at grid cell centers. Each 
 incoming event contributes to a sparse `Delta` based on the 
@@ -87,7 +83,7 @@ selected kernel function, which is then applied to the current
 
 The numerical aspects of the project are intentionally kept 
 simple; the primary focus is on the coordination, evolution, 
-and consistency of the resulting scalar field over time.
+and consistency of the density scalar field over time.
 
 ## What This Project Demonstrates
 This project demonstrates:
@@ -99,15 +95,12 @@ This project demonstrates:
 - Pragmatic tradeoffs between abstraction, correctness, and complexity
 
 ## Future Directions
-A natural extension of the system is the introduction of a 
-snapshot consumption layer intended for frontend visualization. 
-Rather than coupling HTTP concerns directly into the actor system, 
-this would be implemented as a thin adapter responsible for:
+Future iterations will see the implementation of various other actors 
+responsible for computing density contours, constructing GeoJSON 
+representations for ingestion by a frontend UI, etc. Rather than coupling 
+HTTP concerns directly into the actor system, this would be implemented 
+as a thin adapter responsible for:
 
 - requesting density snapshots,
 - transforming them into GeoJSON representations,
 - and exposing them via a simple HTTP API for consumption by a Leaflet-based UI.
-
-This separation preserves the actor system’s focus on coordination 
-and state management, while allowing transport, serialization, 
-and presentation concerns to evolve independently.
