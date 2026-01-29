@@ -11,7 +11,8 @@ lazy val root = project
     libraryDependencies ++= Seq(
       "org.apache.pekko" %% "pekko-actor-typed" % "1.4.0",
       "org.apache.pekko" %% "pekko-actor-testkit-typed" % "1.4.0" % Test,
-      "org.scalacheck" %% "scalacheck" % "1.19.0"
+      "org.scalacheck" %% "scalacheck" % "1.19.0",
+      "ch.qos.logback" % "logback-classic" % "1.5.24"
     )
 
   )
